@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>控制面板{block name="title"}{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <link href="__STATIC__/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="__STATIC__/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+    <link type="text/css" href="__STATIC__/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
+    {block name="appendCss"}{/block}
+</head>
+<body>
+<div id="container">
+    {include file="common/header" /}
+    {include file="common/left" /}
+    <div id="content">
+        {block name="content"}{/block}
+    </div>
+    {include file="common/footer" /}
+    <script type="text/javascript" src="__STATIC__/jquery/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/javascript/common.js" type="text/javascript"></script>
+
+    {block name="appendJs"}{/block}
+</div>
+</body>
+</html>

@@ -1,0 +1,499 @@
+{extend name="common/layout" /}
+
+{block name="content"}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="pull-right">
+            <button type="submit" form="form-set" data-toggle="tooltip" title="保存" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+            </button>
+            <a href="{:url('index')}" data-toggle="tooltip" title="取消" class="btn btn-default">
+                <i class="fa fa-reply"></i>
+            </a>
+        </div>
+        <h1>产品</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="{:url('Manage/index')}">首页</a>
+            </li>
+            <li>
+                <a href="{:url('index')}">产品</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-pencil"></i>
+                设置产品
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form action="{:url('set', ['id'=>isset($data['id'])?$data['id']:null])}" method="post" enctype="multipart/form-data" id="form-set" class="form-horizontal">
+                {if condition="isset($data['id'])"}
+                <input type="hidden" id="input-id" name="id" value="{$data['id']}">
+                {/if}
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#tab-general" data-toggle="tab">基本信息</a>
+                    </li>
+                    <li>
+                        <a href="#tab-description" data-toggle="tab">商品描述</a>
+                    </li>
+                    <li>
+                        <a href="#tab-relation" data-toggle="tab">关联项目</a>
+                    </li>
+                    <li>
+                        <a href="#tab-seo" data-toggle="tab">SEO项目</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-general">
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-title">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="title" value="{$data['title']|default=''}" placeholder="名称" id="input-title" class="form-control" />
+                                {if condition="isset($message['title'])"}
+                                <label for="input-title" class="text-danger">{$message['title']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-upc">通用代码</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="upc" value="{$data['upc']|default=''}" placeholder="通用代码" id="input-upc" class="form-control" />
+                                {if condition="isset($message['upc'])"}
+                                <label for="input-upc" class="text-danger">{$message['upc']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-image">图像</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="image" value="{$data['image']|default=''}" id="input-image" class="form-control image-upload" data-image_thumb="{$data['image_thumb']|default=''}" data-placeholder="__STATIC__/image/avatar.png"/>
+                                <input type="hidden" name="image_thumb" value="$data['image_thumb']|default=''}" class="image-upload-thumb">
+                                {if condition="isset($message['image'])"}
+                                <label for="input-image" class="text-danger">{$message['image']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-quantity">库存</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="quantity" value="{$data['quantity']|default='1'}" placeholder="库存" id="input-quantity" class="form-control" />
+                                {if condition="isset($message['quantity'])"}
+                                <label for="input-quantity" class="text-danger">{$message['quantity']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-sku_id">库存单位</label>
+                            <div class="col-sm-10">
+                                <select name="sku_id"  id="input-sku_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="skus" id="sku"}
+                                    <option value="{$sku['id']}" {if condition="isset($data['sku_id']) && $sku['id'] == $data['sku_id']"}selected{/if}>{$sku['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['sku_id'])"}
+                                <label for="input-sku_id" class="text-danger">{$message['sku_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-stock_status_id">库存状态</label>
+                            <div class="col-sm-10">
+                                <select name="sku_id"  id="input-stock_status_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="stock_status_list" id="stock_status"}
+                                    <option value="{$stock_status['id']}" {if condition="isset($data['stock_status_id']) && $stock_status['id'] == $data['stock_status_id']"}selected{/if}>{$stock_status['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['stock_status_id'])"}
+                                <label for="input-stock_status_id" class="text-danger">{$message['stock_status_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-is_subtract-yes">扣减库存</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="is_subtract" value="1" id="input-is_subtract-yes" class="form-control" {if condition="!isset($data['is_subtract']) || '1' == $data['is_subtract']"}checked{/if}/> 是</label>
+                                &nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="is_subtract" value="0" id="input-is_subtract-no" class="form-control" {if condition="isset($data['is_subtract']) && '0' == $data['is_subtract']"}checked{/if} /> 否</label>
+                                {if condition="isset($message['is_subtract'])"}
+                                <label for="input-is_subtract-yes" class="text-danger">{$message['is_subtract']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-price">售价</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="price" value="{$data['price']|default='0'}" placeholder="售价" id="input-price" class="form-control" />
+                                {if condition="isset($message['price'])"}
+                                <label for="input-price" class="text-danger">{$message['price']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-price_origin">原价</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="price_origin" value="{$data['price_origin']|default='0'}" placeholder="原价" id="input-price_origin" class="form-control" />
+                                {if condition="isset($message['price_origin'])"}
+                                <label for="input-price_origin" class="text-danger">{$message['price_origin']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-minimum">最少起售</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="minimum" value="{$data['minimum']|default='1'}" placeholder="最少起售" id="input-minimum" class="form-control" />
+                                {if condition="isset($message['minimum'])"}
+                                <label for="input-minimum" class="text-danger">{$message['minimum']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-is_shipping-yes">配送支持</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="is_shipping" value="1" id="input-is_shipping-yes" class="form-control" {if condition="!isset($data['is_shipping']) || '1' == $data['is_shipping']"}checked{/if}/> 是</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="is_shipping" value="0" id="input-is_shipping-no" class="form-control" {if condition="isset($data['is_shipping']) && '0' == $data['is_shipping']"}checked{/if} /> 否</label>
+                                {if condition="isset($message['is_shipping'])"}
+                                <label for="input-is_shipping-yes" class="text-danger">{$message['is_shipping']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-date_available">起售时间</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="date_available" value="{$data['date_available']|default=''}" placeholder="起售时间" id="input-date_available" class="form-control datetime" />
+                                {if condition="isset($message['date_available'])"}
+                                <label for="input-date_available" class="text-danger">{$message['date_available']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-length">长</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="length" value="{$data['length']|default='0'}" placeholder="长" id="input-length" class="form-control" />
+                                {if condition="isset($message['length'])"}
+                                <label for="input-length" class="text-danger">{$message['length']}</label>
+                                {/if}
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" name="width" value="{$data['width']|default='0'}" placeholder="宽" id="input-width" class="form-control" />
+                                {if condition="isset($message['width'])"}
+                                <label for="input-width" class="text-danger">{$message['width']}</label>
+                                {/if}
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" name="height" value="{$data['height']|default='0'}" placeholder="高" id="input-height" class="form-control" />
+                                {if condition="isset($message['height'])"}
+                                <label for="input-height" class="text-danger">{$message['height']}</label>
+                                {/if}
+                            </div>
+                            <div class="col-sm-4">
+                                <select name="sku_id"  id="input-length_unit_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="length_unit_list" id="length_unit"}
+                                    <option value="{$length_unit['id']}" {if condition="isset($data['length_unit_id']) && $length_unit['id'] == $data['length_unit_id']"}selected{/if}>{$length_unit['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['length_unit_id'])"}
+                                <label for="input-length_unit_id" class="text-danger">{$message['length_unit_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-weight">重量</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="weight" value="{$data['weight']|default='0'}" placeholder="重量" id="input-weight" class="form-control" />
+                                {if condition="isset($message['weight'])"}
+                                <label for="input-weight" class="text-danger">{$message['weight']}</label>
+                                {/if}
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="sku_id"  id="input-weight_unit_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="weight_unit_list" id="weight_unit"}
+                                    <option value="{$weight_unit['id']}" {if condition="isset($data['weight_unit_id']) && $weight_unit['id'] == $data['weight_unit_id']"}selected{/if}>{$weight_unit['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['weight_unit_id'])"}
+                                <label for="input-weight_unit_id" class="text-danger">{$message['weight_unit_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-tax_id">税类型</label>
+                            <div class="col-sm-10">
+                                <select name="sku_id"  id="input-tax_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="tax_list" id="tax"}
+                                    <option value="{$tax['id']}" {if condition="isset($data['tax_id']) && $tax['id'] == $data['tax_id']"}selected{/if}>{$tax['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['tax_id'])"}
+                                <label for="input-tax_id" class="text-danger">{$message['tax_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-is_on_sale-yes">上架</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="is_on_sale" value="1" id="input-is_on_sale-yes" class="form-control" {if condition="!isset($data['is_on_sale']) || '1' == $data['is_on_sale']"}checked{/if}/> 是</label>
+                                &nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="is_on_sale" value="0" id="input-is_on_sale-no" class="form-control" {if condition="isset($data['is_on_sale']) && '0' == $data['is_on_sale']"}checked{/if} /> 否</label>
+                                {if condition="isset($message['is_on_sale'])"}
+                                <label for="input-is_on_sale-yes" class="text-danger">{$message['is_on_sale']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-sort">排序</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="sort" value="{$data['sort']|default='0'}" placeholder="排序" id="input-sort" class="form-control" />
+                                {if condition="isset($message['sort'])"}
+                                <label for="input-sort" class="text-danger">{$message['sort']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="tab-pane" id="tab-description">
+                        <div class="form-group required">
+                            <div class="col-sm-12">
+                                <textarea name="description" placeholder="描述" id="input-description" class="form-control" >{$data['description']|default=''}</textarea>
+                                {if condition="isset($message['description'])"}
+                                <label for="input-description" class="text-danger">{$message['description']}</label>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="tab-relation">
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-brand_id">品牌</label>
+                            <div class="col-sm-10">
+                                <select name="sku_id"  id="input-brand_id" class="form-control">
+                                    <option value="0">请选择</option>
+                                    {volist name="brand_list" id="brand"}
+                                    <option value="{$brand['id']}" {if condition="isset($data['brand_id']) && $brand['id'] == $data['brand_id']"}selected{/if}>{$brand['title']}</option>
+                                    {/volist}
+                                </select>
+                                {if condition="isset($message['brand_id'])"}
+                                <label for="input-brand_id" class="text-danger">{$message['brand_id']}</label>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="tab-seo">
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-meta_title">SEO标题</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_title" value="{$data['meta_title']|default=''}" placeholder="SEO标题" id="input-meta_title" class="form-control" />
+                                {if condition="isset($message['meta_title'])"}
+                                <label for="input-meta_title" class="text-danger">{$message['meta_title']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-meta_keywords">SEO关键字</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_keywords" value="{$data['meta_keywords']|default=''}" placeholder="SEO关键字" id="input-meta_keywords" class="form-control" />
+                                {if condition="isset($message['meta_keywords'])"}
+                                <label for="input-meta_keywords" class="text-danger">{$message['meta_keywords']}</label>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-meta_description">SEO描述</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="meta_description" value="{$data['meta_description']|default=''}" placeholder="SEO描述" id="input-meta_description" class="form-control" />
+                                {if condition="isset($message['meta_description'])"}
+                                <label for="input-meta_description" class="text-danger">{$message['meta_description']}</label>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="appendCss"}
+<link href="__STATIC__/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+{/block}
+{block name="appendJs"}
+<script type="text/javascript" src="__STATIC__/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="__STATIC__/validate/additional-methods.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/moment.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="__STATIC__/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="__STATIC__/ckeditor/config.js"></script>
+<script type="text/javascript" src="__STATIC__/ckfinder/ckfinder.js"></script>
+<script type="text/javascript" src="__STATIC__/ckfinder/config.js"></script>
+
+
+
+<!--初始化模板数据到js中-->
+<script>
+    // 初始化JS变量的方式, 存储URL
+    var staticUrl = '__STATIC__/';
+    var ckfinderUrl = '__ROOT__/ckfinder/';
+</script>
+
+<!--初始化图像上传管理器-->
+<script>
+    // 监听图像编辑上传事件
+    // 事件委派机制, 可以针对新增的DOM元素处理
+    $('#content').delegate('a.image-set', 'click', function(evt) {
+        // 阻止默认行为
+        evt.preventDefault();
+
+        // 一: 展示操作气泡
+        // 将之前的删除掉
+        $('.popover').popover('hide', function () {
+            $('.popover').remove();
+        });
+        var element = this;
+        // 在当前元素上, 定义一个popup, 气泡提示
+        $(element).popover({
+            html: true,
+            placement: 'right',
+            trigger: 'manual',
+            // 提示结构html
+            content: function () {
+                return '<button type="button" id="button-image-edit" class="btn btn-primary"><i class="fa fa-pencil"></i></button> <button type="button" id="button-image-clear" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>';
+            }
+        });
+        // 显示定义好的气泡提示
+        $(element).popover('show');
+
+        // 二, 增加删除图像处理
+        // 删除
+        $('#button-image-clear').click(function(evt) {
+            var inputImage = $(element).parent().find('input.image-upload');
+            // 将input的value设置为''空字符串.
+            inputImage.val('');
+            // 缩略图也设置为空字符串
+            $(element).parent().find('input.image-upload-thumb').val('');
+            // 将图像的src设置默认的值.
+            $(element).find('img').attr('src', inputImage.data('placeholder'));
+            // 去除 操作气泡
+            $(element).popover('hide');
+            evt.preventDefault();
+        });
+
+        // 三: 编辑弹出ckfinder
+        $('#button-image-edit').click(function (evt) {
+            evt.preventDefault();
+            // 以弹窗的方式将其展示
+            CKFinder.modal({
+                height: 320,
+                // 开启选择图像功能
+                chooseFiles: true,
+                // 初始化
+                onInit: function (finder) {
+                    // 监视其 选择并缩放图像大小事件
+                    finder.on('file:choose:resizedImage', function (evt) {
+//  所选的原始图像 evt.data.file.getUrl()
+//  生成的缩略图图像 evt.data.resizedUrl
+                        $(element).find('img').attr('src', ckfinderUrl + evt.data.resizedUrl);
+                        // 记录数据
+                        $(element).parent().find('input.image-upload').val(evt.data.file.getUrl());
+                        console.log(evt.data.file.getUrl());
+                        $(element).parent().find('input.image-upload-thumb').val(evt.data.resizedUrl);
+
+                    });
+                }
+            });
+            // 去除 操作气泡
+            $(element).popover('hide');
+        });
+
+    });
+
+    // 初始化图像上传域
+    $(function(){
+        // 考虑存在多个图像上传域的情况
+        $('input.image-upload').each(function(i) {
+            // 1, 将当前的input改成隐藏域
+            $(this).attr('type', 'hidden');
+
+            // 2, 生成一个图像, 展示当前数据对应图像
+            // 需要展示的图像src: 当前的图像地址, 或者默认值
+            var src = $(this).val() || $(this).data('placeholder');
+            var aImg = '<a href="" class="image-set"><img style="max-height:100px; max-width: 100px;" src="'+ src + '"/></a>';
+            $(this).before(aImg);
+        });
+    });
+</script>
+<!--初始化时间日期-->
+<script>
+    $(function() {
+        $('.datetime').datetimepicker({
+            format: "YYYY-MM-DD HH:mm:ss"
+        });
+    });
+</script>
+
+<!--初始化ckeditor-->
+<script>
+    $(function() {
+        var editor = CKEDITOR.replace('input-description');
+        CKFinder.setupCKEditor(editor);
+    });
+</script>
+
+<!--表单验证-->
+<script>
+    $(function() {
+        $('#form-set').validate({
+            // 规则
+            rules:{
+            },
+            // 消息
+            messages:{
+            },
+            // 错误类
+            errorClass: 'text-danger'
+        });
+    });
+</script>
+{/block}
